@@ -2,19 +2,20 @@ import socket
 import threading
 
 host='127.0.0.1'
-port=5557
+port=5679
 
 sever=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 sever.connect((host,port))
 
-nickname=input("Enter your nickname \t")
+nickname=input("Enter your user_name \t")
 
 def receive(server):
     while True:
         try:
             message=server.recv(1024).decode('ascii')
-            if message == 'NICK':
+            if message == 'user_name':
+                print("sending username to server...")
                 server.send(nickname.encode('ascii'))
             else:
                 print(f"received message from server: {message}")

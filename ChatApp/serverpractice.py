@@ -14,7 +14,7 @@ nicknames=list()
 connections=dict()
 
 def broadcast(message, client):
-    for nickname, websocket in connections.items():
+    for websocket,nickname in connections.items():
         if websocket is not client :
             websocket.send(message)
 def handle(client):
@@ -38,7 +38,7 @@ def receive():
         client.send(f"NICK".encode('ascii'))
         nickname=client.recv(1024).decode('ascii')
 
-        connections[nickname]=client
+        connections[client]=nickname
         nicknames.append(nickname)
         
         print(f"{address} connected to server with nickname {nickname}")
