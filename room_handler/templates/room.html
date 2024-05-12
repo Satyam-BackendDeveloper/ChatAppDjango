@@ -7,6 +7,14 @@
     <h1> {{ room.room_name }}</h1>
 </div>
 
+<div align="right">
+    welcome, <strong>{{request.user.username}}</strong>
+</div>
+
+<div align="right">
+    <a href="{% url 'logout' %}">LOGOUT</a>
+</div>
+
 <div class="chat-messages" id="chat-messages">
 </div>
 
