@@ -3,3 +3,4 @@ websocket
 asyncio
 channels
 daphne
+django-channels

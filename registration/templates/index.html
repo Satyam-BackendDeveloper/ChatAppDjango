@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block title %} HomePage | Chatroom {% endblock %}
+
+
+{% block content %}
+{% csrf_token %}
+<div>
+    <a href="{% url 'signup' %}">SIGNUP</a> <br>
+    <a href="{% url 'login' %}">LOGIN</a> <br> 
+    <a href="{% url 'logout' %}">LOGOUT</a> <br>
+</div>
+{% endblock %}
+
+

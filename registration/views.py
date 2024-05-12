@@ -3,14 +3,31 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.response import Response
+from django.shortcuts import render, redirect
+from .forms import SignUpForm
 
 # Create your views here.
+class IndexView(APIView):
+    def get(self, request):
+        return render(request, 'index.html', {'room':"room"})
+
+def signup_func_view(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Redirect to a success page, or wherever you want
+            return redirect('login')
+    else:
+        form = SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
+
 class Signup(APIView):
     def post(self, request):
         request_data=request.data
         username = request_data.get("username",None)
-        password1 = request_data.get("password",None)
-        password2 = request_data.get("password",None)
+        password1 = request_data.get("password1",None)
+        password2 = request_data.get("password2",None)
 
         if password1 != password2:
             return Response({"status":False, "message":"Password does not match"}, status=status.HTTP_400_BAD_REQUEST)

@@ -1,0 +1,74 @@
+{% extends 'admin/base_site.html' %}
+{% block title %} Room | {{room.room_name}} {% endblock %}
+
+{% block content %}
+{% csrf_token %}
+<div>
+    <h1> {{ room.room_name }}</h1>
+</div>
+
+<div class="chat-messages" id="chat-messages">
+</div>
+
+<div>
+    <form method="get" action="." class="flex">
+        <input type="text" name="content" placeholder="Your message..." id="chat-message-input">
+        <button id="chat-message-submit">Submit</button>
+
+    </form>
+</div>
+
+    {{ room.room_name|json_script:"json-roomname" }}
+    {{ request.user.username|json_script:"json-username" }}
+
+    <script>
+        
+        const roomName=JSON.parse(document.getElementById('json-roomname').textContent)
+        const username=JSON.parse(document.getElementById('json-username').textContent)
+        const chatSocket=new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e){
+            console.log('onmesage')
+            const data = JSON.parse(e.data);
+            
+            if (data.message){
+                let html = '<div class="chat-messages" id="chat-messages">'
+                    html+= '<p class="font-semibold"><b>' + data.username + '</b></p>'
+                    html+= '<p>' + data.message + '</p>'
+                    html+= '</div>';
+
+                document.querySelector('#chat-messages').innerHTML += html
+            } else{
+                alert("message is empty!")
+            }
+        }
+        
+        chatSocket.onclose = function(e){
+            console.log('onclose')
+        }
+
+        document.querySelector("#chat-message-submit").onclick = function(e){
+            e.preventDefault();
+            const messageInputDOM = document.querySelector("#chat-message-input");
+            const message = messageInputDOM.value;
+            chatSocket.send(
+                JSON.stringify({
+                    "username":username,
+                    "message":message,
+                    "room_name":roomName
+                })
+            );
+
+            messageInputDOM.value = ''
+        }
+
+            
+    </script>
+
+{% endblock %}
