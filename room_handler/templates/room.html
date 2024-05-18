@@ -65,6 +65,35 @@
         justify-content: center;
         align-items: safe;
         margin: auto;
+        align-items:end;
+        padding: 21px;
+    }
+    #inner-chat-messages{
+        width: 50%; 
+        background-color: rgb(28, 28, 28); 
+        border-radius: 16px; 
+        padding: 3px 13px;
+    }
+    #font-semibold{
+        color: #417690
+    }
+
+    #other-inner-chat-messages{
+        width: 50%; 
+        background-color: rgb(28, 28, 28); 
+        border-radius: 16px; 
+        padding: 3px 13px;
+    }
+
+    #other-chat-messages {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: safe;
+        margin: auto;
+        align-items:start;
+        padding: 21px;
     }
 
 </style>
@@ -113,15 +142,25 @@
             + '/'
         );
 
+        chatSocket.addEventListener('open', function (event) {
+            chatSocket.send(
+                JSON.stringify({
+                    "username":username,
+                    "message":username + " joined the chat",
+                })
+            );
+        });
+        
+
         chatSocket.onmessage = function(e){
             console.log('onmesage')
             const data = JSON.parse(e.data);
             
             if (data.username == username){
                 if (data.message){
-                    let html = '<div style="align-items:end;padding: 21px;" class="chat-messages" id="chat-messages">'
-                        html+= '<div style="width: 50%; background-color: rgb(28, 28, 28); border-radius: 16px; padding: 3px 13px;" >'
-                        html+= '<p class="font-semibold" style="color: #417690"><b>' + data.username + '</b></p>'
+                    let html = '<div id="chat-messages">'
+                        html+= '<div id="inner-chat-messages">'
+                        html+= '<p id="font-semibold"><b>' + data.username + '</b></p>'
                         html+= '<p>' + data.message + '</p>'
                         html+='</div>'
                         html+= '</div>';
@@ -133,9 +172,9 @@
             }
             else{
                 if (data.message){
-                    let html = '<div style="align-items:start;padding: 21px;" class="chat-messages" id="chat-messages">'
-                        html+= '<div style="width: 50%; background-color: rgb(28, 28, 28); border-radius: 16px; padding: 3px 13px;" >'
-                        html+= '<p class="font-semibold" style="color: #417690"><b>' + data.username + '</b></p>'
+                    let html = '<div id="other-chat-messages">'
+                        html+= '<div id="other-inner-chat-messages">'
+                        html+= '<p id="font-semibold"><b>' + data.username + '</b></p>'
                         html+= '<p>' + data.message + '</p>'
                         html+='</div>'
                         html+= '</div>';
