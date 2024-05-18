@@ -1,0 +1,22 @@
+{% extends 'admin/base_site.html' %}
+{% block title %} Users | {% endblock %}
+
+
+{% block content %}
+{% csrf_token %}
+<div>
+    <h1>Users</h1>
+</div>
+
+<div>
+    <h2> Welcome, <strong>{{ request.user.username }} </strong></h2>
+    {% for user in users %}
+        {% if user.username != request.user.username %}
+            <h2> {{user.username}} </h2>
+            <a href="{% url 'private_chat' user.id%}">CHAT</a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+
+{% endblock %}

@@ -93,7 +93,8 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = '/rooms/get_all_rooms/'
+LOGIN_REDIRECT_URL = '/rooms/chat_type_selection/'
+LOGOUT_REDIRECT_URL = '/'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

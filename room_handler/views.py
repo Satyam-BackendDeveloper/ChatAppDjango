@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializers import RoomSerializer
 from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 
 class GetRoom(APIView):
     permission_classes = [IsAuthenticated]
@@ -42,3 +43,20 @@ class CreateRooms(APIView):
             return Response({"status":True, "data": {"port":port, "room_name":room_name, "description":description}, "message":"Chat room created successfully"}, status=status.HTTP_201_CREATED)
 
         return Response({"status":False, "error":serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+class ChatTypeSelection(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return render(request,'chat_type_selection.html', {})
+    
+class PrivateChatView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, user_id):
+        receiver=User.objects.get(id=user_id)
+        return render(request,'private_chat.html', {"receiver":receiver})
+
+class ViewUsers(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        users=User.objects.exclude(id=request.user.id)
+        return render(request,'all_users.html', {"users":users})
